@@ -10,6 +10,12 @@ export default {
     extend: {
       backgroundImage: {
         // Clear Day: Bright Blue
+        'clear-day-img': "url('/public/img/clear-day.png')",
+
+        // Clear Night: Deep Indigo
+        'clear-night-img': "url('/public/img/clear-night.png')",
+
+        // Clear Day: Bright Blue
         'clear-day': 'linear-gradient(to bottom right, #3B82F6, #93C5FD)',
 
         // Clear Night: Deep Indigo

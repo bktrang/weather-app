@@ -1,31 +1,49 @@
 <script setup>
 import { reactive } from 'vue'
 
+// Define the custom events this component can emit
 const emit = defineEmits(['place-data'])
 
+// --- Reactive State ---
+// Uses `reactive` to manage the search input and results state
 const searchTerm = reactive({
-  query: '',
-  timeout: null,
-  results: null,
+  query: '', // Holds the current text input by the user
+  timeout: null, // Stores the debounce timeout ID
+  results: null, // Stores the array of location suggestions from the API
 })
 
+// --- Methods ---
+
+/**
+ * Handles the search input, implementing a debounce mechanism.
+ * It clears the previous timeout and sets a new one, ensuring the API call
+ * only fires after the user stops typing for 500ms.
+ */
 const handleSearch = () => {
   clearTimeout(searchTerm.timeout)
   searchTerm.timeout = setTimeout(async () => {
     if (searchTerm.query !== '') {
+      // Fetch location suggestions from the weather API based on the query
       const response = await fetch(
         `https://api.weatherapi.com/v1/search.json?key=02820e20d5cb4699bf4163806250112&q=${searchTerm.query}`,
       )
       const data = await response.json()
       searchTerm.results = data
     } else {
+      // Clear results if the search box is empty
       searchTerm.results = null
     }
   }, 500)
 }
 
+/**
+ * Fetches the 5-day weather forecast for a selected location ID.
+ * Emits the weather data to the parent component and resets the search state.
+ * @param {number} id - The unique ID of the selected place.
+ */
 const getWeather = async (id) => {
   try {
+    // Fetch the 5-day forecast using the selected location's ID
     const response = await fetch(
       `https://api.weatherapi.com/v1/forecast.json?key=02820e20d5cb4699bf4163806250112&q=id:${id}&days=5&aqi=no&alerts=no`,
     )
@@ -36,8 +54,10 @@ const getWeather = async (id) => {
 
     const data = await response.json()
 
+    // Emit the successful weather data to the parent (App.vue)
     emit('place-data', data)
 
+    // Clear search state after successful selection
     searchTerm.query = ''
     searchTerm.results = null
   } catch (error) {
