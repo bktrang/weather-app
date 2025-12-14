@@ -1,3 +1,4 @@
+// vite.config.js
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
@@ -7,11 +8,13 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Base path set for GitHub Pages deployment
+  base: '/weather-app/', 
+  
   plugins: [
     vue(),
     vueDevTools(),
     tailwindcss(),
-
   ],
   resolve: {
     alias: {

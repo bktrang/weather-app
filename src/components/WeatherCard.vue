@@ -6,7 +6,6 @@ import HourlyChart from './HourlyChart.vue'
 import FiveDayTable from './FiveDayTable.vue'
 
 // --- Props and Emits Setup ---
-// Defines the required 'place' prop which contains all weather data.
 const props = defineProps({
   place: {
     type: Object,
@@ -14,27 +13,17 @@ const props = defineProps({
   },
 })
 
-// Defines the custom event this component can emit to its parent (App.vue).
 const emit = defineEmits(['delete-place'])
 
-/**
- * Emits the 'delete-place' event to the parent component.
- */
 const deletePlace = () => {
   emit('delete-place', props.place.location.name)
 }
 
 // --- State Management ---
-// Tracks the currently active view (tab) in the weather card.
 const activeView = ref('current')
 
 // --- Computed Properties ---
 
-/**
- * Computes the formatted local time string for the location.
- * Converts the API string format (YYYY-MM-DD HH:mm) into a user-friendly format.
- * @returns {string} Formatted time (e.g., "Fri 02:18 PM").
- */
 const formattedLocalTime = computed(() => {
   const localTimeString = props.place.location.localtime
   // Replace space with 'T' to ensure correct date parsing across browsers
@@ -48,11 +37,6 @@ const formattedLocalTime = computed(() => {
   })
 })
 
-/**
- * Computes the dynamic Tailwind CSS class for the background color of the content area.
- * The color changes based on temperature and weather condition (rain/snow).
- * @returns {string} Tailwind CSS class string.
- */
 const weatherClass = computed(() => {
   const isDay = props.place.current.is_day
   const temp = props.place.current.temp_f
@@ -76,26 +60,29 @@ const weatherClass = computed(() => {
 
 /**
  * Computes the CSS style object for the header's background image.
- * The image (clear-day or clear-night) is selected based on the current time (is_day).
+ * FIX: Uses import.meta.env.BASE_URL to prepend the subpath (/weather-app/) 
+ * to the image reference, ensuring it loads correctly in the production build.
  * @returns {Object} CSS style object.
  */
 const backgroundStyles = computed(() => {
   const isDay = props.place.current.is_day
+  
+  // Retrieve the base path set in vite.config.js (e.g., /weather-app/)
+  const baseURL = import.meta.env.BASE_URL 
 
-  const imagePath = isDay ? '/img/clear-day.png' : '/img/clear-night.png'
+  // Concatenate BASE_URL with the image path from the public/img/ folder
+  const imagePath = isDay 
+    ? `${baseURL}img/clear-day.png` 
+    : `${baseURL}img/clear-night.png`
 
   return {
-    backgroundImage: `url(${imagePath})`,
+    backgroundImage: `url('${imagePath}')`, // Added single quotes around URL for safety
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
   }
 })
 
-/**
- * Extracts the current date string (YYYY-MM-DD) for use in child components.
- * @returns {string} The date part of the localtime string.
- */
 const currentLocationDate = computed(() => {
   return props.place.location.localtime.split(' ')[0]
 })

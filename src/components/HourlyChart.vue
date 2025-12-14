@@ -8,6 +8,12 @@ import {
   Title,
   Tooltip,
   Legend,
+  
+  // --- ADDED FIXES BELOW ---
+  BarController, // Required for the 'type: "bar"' dataset
+  Filler,        // Required for the 'fill: true' line dataset
+  // --- ADDED FIXES ABOVE ---
+  
   BarElement,
   CategoryScale,
   LinearScale,
@@ -20,6 +26,12 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  
+  // --- ADDED FIXES BELOW ---
+  BarController, // Register the controller
+  Filler,        // Register the plugin
+  // --- ADDED FIXES ABOVE ---
+  
   BarElement,
   CategoryScale,
   LinearScale,
@@ -67,13 +79,13 @@ const chartData = computed(() => {
         data: temps,
         borderColor: '#FFFFFF', // White line color
         backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent fill below line
-        fill: true,
+        fill: true, // This option now works
         yAxisID: 'yTemp', // Use the left axis
         tension: 0.4, // Smooths the line curve
       },
       // Dataset 2: Rain Amount (Bar Chart)
       {
-        type: 'bar',
+        type: 'bar', // This chart type now works
         label: 'Rain Amount (mm)',
         data: rain,
         backgroundColor: 'yellow', // Yellow bar color
