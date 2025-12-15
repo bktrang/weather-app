@@ -88,7 +88,12 @@ const getWeather = async (id) => {
             @click.stop.prevent="getWeather(place.id)"
             class="px-3 my-2 hover:text-[#093358] hover:font-bold w-full text-left"
           >
-            {{ place.name }}, {{ place.region }}, {{ place.country }}
+            <div v-if="place.region !== ''">
+                {{ place.name }}, {{ place.region }}, {{ place.country }}
+            </div>
+            <div v-else>
+                {{ place.name }}, {{ place.country }}
+            </div>
           </button>
         </div>
       </div>

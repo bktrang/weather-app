@@ -21,6 +21,7 @@ const API_KEY = '02820e20d5cb4699bf4163806250112'
  * @returns {string} The unique key (e.g., "portland-oregon-united-states").
  */
 const createLocationKey = (location) => {
+  // Note: We include region in the key to ensure uniqueness even if it's empty
   return `${location.name}-${location.region}-${location.country}`
     .toLowerCase()
     .replace(/\s+/g, '-')
@@ -115,6 +116,7 @@ const viewPlace = (uniqueKey) => {
   const placeToView = savedPlaces.value.find((p) => createLocationKey(p.location) === uniqueKey)
 
   // Use the full descriptive name (City, Region, Country) as the API query
+  // Note: API accepts empty region string
   const fullLocationIdentifier = `${placeToView.location.name}, ${placeToView.location.region}, ${placeToView.location.country}`
 
   fetchPlace(fullLocationIdentifier)
@@ -204,7 +206,11 @@ const deletePlace = () => {
             :key="createLocationKey(place.location)"
             :value="createLocationKey(place.location)"
           >
-            {{ place.location.name }}, {{ place.location.region }}, {{ place.location.country }}
+            {{ 
+                place.location.name 
+                + (place.location.region ? `, ${place.location.region}` : '') 
+                + `, ${place.location.country}` 
+            }}
           </option>
         </select>
       </div>
